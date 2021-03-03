@@ -1,0 +1,50 @@
+Cocoru Emilia Iuliana 322CA
+
+Tema 3 - Protocoale de comunicație
+
+Pentru implementarea temei m-am folosit de laboratorul 10,
+precum și de parson-ul ce se găsea în cerință.
+
+Astfel clientul conține o serie de if-uri ce corespund cu fiecare comandă în parte:
+
+-register: realizez citirea de la tastatură și îmi creez un json cu aceste date,
+		pe care îl trimit mai departe funcției de compute_post_request.
+
+-login: asemănător cu register, doar că de aceeastă dată îmi voi prelua cookie-ul
+		din mesajul primit de la server și îl voi salva într-un char*.
+
+-enter_library: apelez funcția de compute_get_request cu cookie-ul obținut mai devreme,
+		trimit messajul către server, iar din reply-ul obținut voi prelua token-ul,
+		salvându-l de asemenea într-un vector de char-uri.
+
+-get_books: apelez tot funcția de compute_get_request,
+		dar de această dată este necesar să adaug token-ul
+		pentru a demonstra că există acces la bibliotecă.
+
+-add_book: creez un json cu toate datele necesare de la tastatură
+		și apelez funcția de compute_get_request(dacă toate informațiile sunt corecte)
+		și dacă am acces la bibliotecă(cu alte cuvinte am un token valid).
+
+-get_book și delete_book: imi creez url-ul necesar cu id-ul primit de la stdin,
+		și voi apela pentru get_book funcția compute_get_request,
+		iar pentru delete_book funcția compute_delete_request(asemenănătoare celei de get,
+		doar că se realizează comanda de delete). Pentru ambele este necesar token-ul JWT.
+
+-logout: se realizează un compute_get_request la url-ul specific acestei comenzi,
+		fiind necesar să demonstrez autentificarea(și anume cookie-ul).
+
+Pentru toate acestea am apelat funcțiile send_to_server și receive_from_server,
+mi-am preluat erorile din răspunsul de la server cu ajutorul unui json
+și am afișat un mesaj de succes specific fiecărei acțiuni, dacă totul funcționează cum trebuie
+și request-ul a fost corect. De asemenea am folosit acest JSON pentru a-mi prelua datele despre
+cărți mult mai ușor, putând afișa doar informațiile necesare, ci nu tot reply-ul serverului.
+
+
+Pentru JSON m-am folosit de următoarele funcții din parson:
+->json_parse_string, json_value_get_object, json_object_dotget_string, json_object_dotget_number,
+json_value_get_array, json_array_get_count: pentru a prelua un obiect sau un array de obiecte de
+tip json din răspunsul primit de la server;
+
+->json_value_init_object, json_value_get_object, json_object_set_string,
+json_serialize_to_string_pretty -> pentru a-mi crea un obiect de tip json și a-l forma în stringul
+specific.
